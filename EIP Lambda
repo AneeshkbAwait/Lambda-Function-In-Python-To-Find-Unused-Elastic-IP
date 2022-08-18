@@ -1,0 +1,37 @@
+import boto3
+
+REGION = "ap-south-1"
+TOPIC_ARN = "arn:aws:sns:ap-south-1:254356662519:Notify-Unused-Eip" # Note: SNS Topic ARN 
+
+unused_eips = []
+
+sns_client = boto3.client('sns',region_name=REGION )
+
+ec2 = boto3.client('ec2',region_name=REGION )
+
+response = ec2.describe_addresses()
+
+def lambda_unusedEip(event, context):
+# check if there is any existing elastic IP
+  check = list(response['Addresses'])
+
+  if not check:
+    print("Elastic IP does not exist | Exiting program.....")
+    exit()
+
+# If eip is there, we will check if it is associated with instance or not
+  for address in response['Addresses']:
+    if 'InstanceId' in address:
+        print('Elastic IP {} is associated with instance {}'.format(address['PublicIp'], address['InstanceId']))
+    else:
+        print('Elastic IP {} is unused and can be released'.format(address['PublicIp']))
+        unused_eips.append("Unused elastic ip: {}".format(address['PublicIp']))
+
+# Sending email Notification for unused Elastic Ips via SNS Notification Service   
+  for unused in unused_eips:
+    sns_client.publish(
+        TopicArn=TOPIC_ARN, 
+        Subject='Alert - Unused Elastic Ip To be dissociated',
+        Message=str(unused)
+      )
+    return "success"
