@@ -4,7 +4,7 @@ AWS Lambda is a serverless compute service that runs your code in response to ev
 
 Here, I have written a code in Python which will find any unused elastic IPs in your AWS infrastructure and it will send a notification based on the SNS topic which I created earlier. 
 
-Later, I updated the code to work with AWS Lambda, and the Lambda function will trigger once a week, which will be scheduled using AWS Event Bridge Service or CloudWatch service.
+Later, I updated the code to work with AWS Lambda, and the Lambda function will trigger once in a week, which can be scheduled using AWS Event Bridge or CloudWatch service.
 
 Steps involved in the complete setup:
 
@@ -56,4 +56,4 @@ def lambda_unusedEip(event, context):
 Create a weekly schedule (cron) for the Lambda Function. Cron should be scheduled in either AWS Event Bridge or CloudWatch services, depending on your preference. I have used AWS Event Bridge for setting up cron.
 ![alt text](https://s3.ap-south-1.amazonaws.com/githubpjts.aneeshponnu.tech/Cron+Event.PNG "AWS Event Bridge")
 
-I hope this topic is clear to everyone who reads this. If you have anything to share with me on this topic, please get in touch with me.
+I hope this topic is clear to everyone who read this. If you have anything to share with me on this topic, please get in touch with me.
